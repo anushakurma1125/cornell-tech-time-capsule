@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+@theme {
+  /* Cornell Brand Colors */
+  --color-cornell-red: #B31B1B;
+  --color-cornell-red-dark: #8C1515;
+  --color-cornell-red-light: #D44D4D;
+
+  /* Clean whites and grays */
+  --color-parchment: #FFFFFF;
+  --color-parchment-dark: #F5F5F5;
+  --color-warm-gray: #E5E5E5;
+  --color-warm-gray-dark: #A0A0A0;
+
+  /* Skyline / line art grays */
+  --color-skyline: #D0D0D0;
+  --color-skyline-light: #E8E8E8;
+
+  /* Capsule steel */
+  --color-steel: #8A8D8F;
+  --color-steel-light: #B0B3B5;
+
+  /* Text */
+  --color-text-primary: #1A1A1A;
+  --color-text-secondary: #444444;
+  --color-text-muted: #777777;
+
+  /* Artifact tile accent palette */
+  --color-tile-blue: #2E6DA4;
+  --color-tile-teal: #2A9D8F;
+  --color-tile-green: #6A994E;
+  --color-tile-orange: #E76F51;
+  --color-tile-purple: #7B2D8E;
+  --color-tile-gold: #E9C46A;
+
+  /* Fonts — matching Cornell Tech's bold condensed sans-serif style */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #FFFFFF;
+  color: var(--color-text-primary);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #FFFFFF;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-warm-gray-dark);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-steel);
+}
+
+/* Flowing fabric animation — anchored at the capsule (right side) */
+@keyframes fabric-flow {
+  0% {
+    transform: rotate(0deg) skewY(0deg);
+  }
+  20% {
+    transform: rotate(0.3deg) skewY(0.15deg);
+  }
+  40% {
+    transform: rotate(-0.25deg) skewY(-0.1deg);
+  }
+  60% {
+    transform: rotate(0.35deg) skewY(0.2deg);
+  }
+  80% {
+    transform: rotate(-0.2deg) skewY(-0.15deg);
+  }
+  100% {
+    transform: rotate(0deg) skewY(0deg);
+  }
+}
+
+.animate-fabric-flow {
+  animation: fabric-flow 5s ease-in-out infinite;
+  transform-origin: right center;
+}
+
+/* Fabric texture overlay utility */
+.fabric-texture {
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.015) 2px,
+      rgba(0,0,0,0.015) 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.015) 2px,
+      rgba(0,0,0,0.015) 4px
+    );
+}
