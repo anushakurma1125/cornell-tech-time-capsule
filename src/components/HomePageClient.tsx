@@ -16,7 +16,7 @@ export default function HomePageClient({ years, yearsData, latestYear }: HomePag
   return (
     <div className="relative">
       {/* Hero Section */}
-      <section className="relative min-h-[85vh] flex flex-col overflow-hidden">
+      <section className="relative min-h-[85vh] flex flex-col">
         <FloatingSquares />
 
         {/* Hero content */}
@@ -71,15 +71,12 @@ export default function HomePageClient({ years, yearsData, latestYear }: HomePag
           </motion.div>
         </div>
 
-        {/* Skyline — in normal flow, sits below content */}
-        <div className="w-full mt-auto -mb-24">
-          <Image
+        {/* Skyline — stretched to fill full width */}
+        <div className="w-full mt-auto">
+          <img
             src="/images/skyline.png"
             alt="NYC skyline line art"
-            width={1920}
-            height={300}
-            className="w-full h-auto"
-            priority
+            className="w-full h-auto block"
           />
         </div>
       </section>
