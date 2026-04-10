@@ -156,7 +156,7 @@ export default function YearPageClient({ yearStr, data, programs }: YearPageClie
       {/* Artifact Gallery */}
       <section className="max-w-7xl mx-auto px-4 pb-20">
         {/* Search and Filters */}
-        <div className="sticky top-16 z-30 bg-white/95 backdrop-blur-md py-4 border-b border-warm-gray mb-6">
+        <div className="sticky top-0 z-30 bg-white/95 backdrop-blur-md py-4 border-b border-warm-gray mb-6">
           <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
             {/* Search */}
             <div className="relative flex-1 max-w-sm">
