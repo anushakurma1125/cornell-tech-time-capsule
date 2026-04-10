@@ -20,42 +20,23 @@ export async function GET(
       return new NextResponse("Image not found", { status: 404 });
     }
 
-    const contentType = (response.headers.get("content-type") || "").toLowerCase();
-    const buffer = Buffer.from(await response.arrayBuffer());
+    const arrayBuffer = await response.arrayBuffer();
+    const input = new Uint8Array(arrayBuffer);
 
-    // Convert HEIC/HEIF to JPEG
-    if (
-      contentType.includes("heic") ||
-      contentType.includes("heif") ||
-      contentType === "application/octet-stream"
-    ) {
-      try {
-        const converted = await sharp(buffer).jpeg({ quality: 85 }).toBuffer();
-        return new NextResponse(converted, {
-          headers: {
-            "Content-Type": "image/jpeg",
-            "Cache-Control": "public, max-age=86400, s-maxage=86400",
-          },
-        });
-      } catch {
-        // If sharp fails (not actually HEIC), return original
-      }
-    }
-
-    // For standard image formats, pass through (optimize with sharp if possible)
+    // Convert all images to JPEG through sharp (handles HEIC, HEIF, PNG, WebP, etc.)
     try {
-      const optimized = await sharp(buffer).jpeg({ quality: 85 }).toBuffer();
-      return new NextResponse(optimized, {
+      const output = await sharp(input).jpeg({ quality: 85 }).toBuffer();
+      return new NextResponse(output.buffer as ArrayBuffer, {
         headers: {
           "Content-Type": "image/jpeg",
           "Cache-Control": "public, max-age=86400, s-maxage=86400",
         },
       });
     } catch {
-      // If sharp can't process it, return the original buffer
-      return new NextResponse(buffer, {
+      // If sharp fails, return original bytes
+      return new NextResponse(arrayBuffer, {
         headers: {
-          "Content-Type": contentType || "image/jpeg",
+          "Content-Type": response.headers.get("content-type") || "image/jpeg",
           "Cache-Control": "public, max-age=86400, s-maxage=86400",
         },
       });
