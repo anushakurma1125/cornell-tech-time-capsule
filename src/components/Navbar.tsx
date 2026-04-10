@@ -3,89 +3,75 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { useState } from "react";
 
 export default function Navbar() {
   const pathname = usePathname();
-  const [mobileOpen, setMobileOpen] = useState(false);
 
   const links = [
-    { href: "/", label: "Home" },
-    { href: "/archive", label: "Archive" },
-    { href: "/about", label: "About" },
+    {
+      href: "/",
+      label: "Home",
+      icon: (
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" />
+          <path d="M9 21V12h6v9" />
+        </svg>
+      ),
+    },
+    {
+      href: "/archive",
+      label: "Archive",
+      icon: (
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="3" width="7" height="7" rx="1" />
+          <rect x="14" y="3" width="7" height="7" rx="1" />
+          <rect x="3" y="14" width="7" height="7" rx="1" />
+          <rect x="14" y="14" width="7" height="7" rx="1" />
+        </svg>
+      ),
+    },
+    {
+      href: "/about",
+      label: "About",
+      icon: (
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="16" x2="12" y2="12" />
+          <line x1="12" y1="8" x2="12.01" y2="8" />
+        </svg>
+      ),
+    },
   ];
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-warm-gray">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-end h-14">
-          {/* Desktop links */}
-          <div className="hidden sm:flex items-center gap-1">
-            {links.map((link) => {
-              const isActive = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="relative px-4 py-2 text-xs font-bold uppercase tracking-widest rounded-md transition-colors hover:text-cornell-red"
-                  style={{ color: isActive ? "#B31B1B" : "#4A4540" }}
-                >
-                  {link.label}
-                  {isActive && (
-                    <motion.div
-                      layoutId="nav-indicator"
-                      className="absolute bottom-0 left-2 right-2 h-0.5 bg-cornell-red rounded-full"
-                      transition={{ type: "spring", stiffness: 500, damping: 35 }}
-                    />
-                  )}
-                </Link>
-              );
-            })}
-          </div>
-
-          {/* Mobile menu button */}
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="sm:hidden p-2 text-text-secondary hover:text-cornell-red transition-colors"
-            aria-label="Toggle menu"
+    <nav className="fixed right-0 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center gap-2 p-2">
+      {links.map((link) => {
+        const isActive = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
+        return (
+          <Link
+            key={link.href}
+            href={link.href}
+            className="group relative flex items-center justify-center w-11 h-11 rounded-xl transition-all duration-200 hover:bg-cornell-red/10"
+            style={{
+              backgroundColor: isActive ? "rgba(179,27,27,0.1)" : "transparent",
+              color: isActive ? "#B31B1B" : "#888",
+            }}
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              {mobileOpen ? (
-                <path d="M6 6l12 12M6 18L18 6" />
-              ) : (
-                <path d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
-        </div>
-
-        {/* Mobile menu */}
-        {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="sm:hidden pb-4 border-t border-warm-gray mt-2 pt-3"
-          >
-            {links.map((link) => {
-              const isActive = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  className="block px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                  style={{
-                    color: isActive ? "#B31B1B" : "#4A4540",
-                    backgroundColor: isActive ? "rgba(179,27,27,0.06)" : "transparent",
-                  }}
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
-          </motion.div>
-        )}
-      </div>
+            {link.icon}
+            {isActive && (
+              <motion.div
+                layoutId="sidebar-indicator"
+                className="absolute right-0 top-2 bottom-2 w-0.5 bg-cornell-red rounded-full"
+                transition={{ type: "spring", stiffness: 500, damping: 35 }}
+              />
+            )}
+            {/* Tooltip */}
+            <span className="absolute right-full mr-2 px-2 py-1 text-xs font-medium text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+              {link.label}
+            </span>
+          </Link>
+        );
+      })}
     </nav>
   );
 }
