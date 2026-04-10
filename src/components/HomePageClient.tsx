@@ -47,20 +47,26 @@ export default function HomePageClient({ years, yearsData, latestYear }: HomePag
               transition={{ delay: 0.6 }}
               className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4"
             >
-              <Link
-                href="/archive"
-                className="px-8 py-3 bg-cornell-red text-white font-semibold rounded-lg hover:bg-cornell-red-dark transition-colors shadow-sm"
-              >
-                Explore the Archive
-              </Link>
               {latestYear && (
                 <Link
                   href={`/archive/${latestYear.year}`}
-                  className="px-8 py-3 border-2 border-cornell-red text-cornell-red font-semibold rounded-lg hover:bg-cornell-red hover:text-white transition-colors"
+                  className="px-8 py-3 bg-cornell-red text-white font-semibold rounded-lg hover:bg-cornell-red-dark transition-colors shadow-sm"
                 >
                   Class of {latestYear.year}
                 </Link>
               )}
+              <Link
+                href="/archive"
+                className="px-8 py-3 border-2 border-cornell-red text-cornell-red font-semibold rounded-lg hover:bg-cornell-red hover:text-white transition-colors"
+              >
+                Explore the Archive
+              </Link>
+              <Link
+                href="/about"
+                className="px-8 py-3 border-2 border-cornell-red text-cornell-red font-semibold rounded-lg hover:bg-cornell-red hover:text-white transition-colors"
+              >
+                Know More
+              </Link>
             </motion.div>
           </motion.div>
         </div>
