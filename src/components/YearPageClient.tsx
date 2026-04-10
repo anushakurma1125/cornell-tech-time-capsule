@@ -4,18 +4,21 @@ import { useState, useMemo, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { getYearData, getPrograms } from "@/data/sample-data";
-import { Artifact, Program } from "@/data/types";
+import { Artifact, YearData } from "@/data/types";
 import ArtifactCard from "@/components/ArtifactCard";
 import ArtifactModal from "@/components/ArtifactModal";
 
-export default function YearPageClient({ yearStr }: { yearStr: string }) {
+interface YearPageClientProps {
+  yearStr: string;
+  data: YearData | null;
+  programs: string[];
+}
+
+export default function YearPageClient({ yearStr, data, programs }: YearPageClientProps) {
   const year = parseInt(yearStr, 10);
-  const data = getYearData(year);
-  const programs = getPrograms();
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedProgram, setSelectedProgram] = useState<Program | "all">("all");
+  const [selectedProgram, setSelectedProgram] = useState<string>("all");
   const [selectedArtifact, setSelectedArtifact] = useState<Artifact | null>(null);
   const [showCollage, setShowCollage] = useState(true);
 
@@ -181,7 +184,7 @@ export default function YearPageClient({ yearStr }: { yearStr: string }) {
             {/* Program filter */}
             <select
               value={selectedProgram}
-              onChange={(e) => setSelectedProgram(e.target.value as Program | "all")}
+              onChange={(e) => setSelectedProgram(e.target.value)}
               className="px-4 py-2.5 bg-white border border-warm-gray rounded-lg text-sm focus:outline-none focus:border-cornell-red focus:ring-1 focus:ring-cornell-red/30 text-text-primary cursor-pointer"
             >
               <option value="all">All Programs</option>
