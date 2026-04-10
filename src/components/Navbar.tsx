@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { useState } from "react";
@@ -19,18 +18,7 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-warm-gray">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <Image
-              src="/images/cornell-tech-logo.png"
-              alt="Cornell Tech"
-              width={36}
-              height={36}
-              className="group-hover:scale-105 transition-transform"
-            />
-          </Link>
-
+        <div className="flex items-center justify-end h-14">
           {/* Desktop links */}
           <div className="hidden sm:flex items-center gap-1">
             {links.map((link) => {
