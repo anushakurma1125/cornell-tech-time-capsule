@@ -63,23 +63,11 @@ export default function ArtifactModal({ artifact, onClose }: ArtifactModalProps)
                 src={artifact.imageUrl}
                 alt={artifact.title}
                 fill
-                className="object-cover rounded-t-xl"
+                className="object-cover rounded-xl"
                 sizes="(max-width: 672px) 100vw, 672px"
               />
             </div>
 
-            {/* Details */}
-            <div className="p-6">
-              <h2 className="font-display text-2xl font-bold text-text-primary">{artifact.title}</h2>
-              <p className="text-text-secondary mt-2 leading-relaxed">{artifact.caption}</p>
-
-              <div className="mt-5 grid grid-cols-2 gap-3">
-                <Detail label="NetID" value={artifact.netId} />
-                <Detail label="Program" value={artifact.program} />
-                <Detail label="Year" value={String(artifact.year)} />
-                <Detail label="Type" value={artifact.artifactType} />
-              </div>
-            </div>
           </motion.div>
         </motion.div>
       )}
@@ -87,11 +75,3 @@ export default function ArtifactModal({ artifact, onClose }: ArtifactModalProps)
   );
 }
 
-function Detail({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="bg-parchment rounded-lg px-3 py-2">
-      <span className="text-[10px] uppercase tracking-wider text-text-muted font-medium">{label}</span>
-      <p className="text-sm font-semibold text-text-primary mt-0.5 font-mono">{value}</p>
-    </div>
-  );
-}
