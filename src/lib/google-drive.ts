@@ -1,9 +1,109 @@
 import { Artifact, YearData } from "@/data/types";
-import { yearsConfig, YearConfig } from "./config";
+import { MAIN_DRIVE_FOLDER_ID, YearConfig } from "./config";
+
+// ---------------------------------------------------------------------------
+// Google Drive folder scanning (no API key needed — uses embedded folder view)
+// ---------------------------------------------------------------------------
+
+interface FolderEntry {
+  id: string;
+  title: string;
+  isFolder: boolean;
+  isSpreadsheet: boolean;
+}
+
+// Parse the embedded folder view HTML to extract entries
+function parseFolderEntries(html: string): FolderEntry[] {
+  const entries: FolderEntry[] = [];
+  // Match each flip-entry block
+  const entryPattern =
+    /id="entry-([^"]+)"[\s\S]*?<div class="flip-entry-title">([^<]+)<\/div>/g;
+  let match;
+
+  while ((match = entryPattern.exec(html)) !== null) {
+    const id = match[1];
+    const title = match[2].trim();
+
+    // Check if it's a folder (has folder icon class) or spreadsheet
+    // Extract the surrounding HTML for this entry to check type
+    const entryStart = html.lastIndexOf('<div class="flip-entry"', match.index);
+    const entryEnd = html.indexOf("</div></div></div>", match.index);
+    const entryHtml = html.substring(entryStart, entryEnd + 20);
+
+    const isFolder = entryHtml.includes("drive-sprite-folder");
+    const isSpreadsheet =
+      entryHtml.includes("vnd.google-apps.spreadsheet") ||
+      entryHtml.includes("/spreadsheets/d/");
+
+    entries.push({ id, title, isFolder, isSpreadsheet });
+  }
+
+  return entries;
+}
+
+// Fetch and parse a Google Drive folder's contents
+async function listFolder(folderId: string): Promise<FolderEntry[]> {
+  try {
+    const url = `https://drive.google.com/embeddedfolderview?id=${folderId}#list`;
+    const response = await fetch(url, {
+      next: { revalidate: 300 }, // Revalidate every 5 minutes
+      headers: { "User-Agent": "Mozilla/5.0" },
+    });
+
+    if (!response.ok) return [];
+
+    const html = await response.text();
+    return parseFolderEntries(html);
+  } catch (error) {
+    console.error(`Error listing folder ${folderId}:`, error);
+    return [];
+  }
+}
+
+// Discover all year configs by scanning the main Drive folder
+async function discoverYears(): Promise<YearConfig[]> {
+  const entries = await listFolder(MAIN_DRIVE_FOLDER_ID);
+  const yearConfigs: YearConfig[] = [];
+
+  for (const entry of entries) {
+    // Year folders are named as 4-digit numbers (e.g., "2026", "2027")
+    const yearNum = parseInt(entry.title, 10);
+    if (!entry.isFolder || isNaN(yearNum) || yearNum < 2000 || yearNum > 2100) {
+      continue;
+    }
+
+    // Scan inside the year folder to find the Sheet and Final Fabric folder
+    const yearEntries = await listFolder(entry.id);
+
+    let sheetId: string | undefined;
+    let finalFabricFolderId: string | undefined;
+
+    for (const ye of yearEntries) {
+      if (ye.isSpreadsheet) {
+        sheetId = ye.id;
+      }
+      if (ye.isFolder && ye.title.toLowerCase().includes("final fabric")) {
+        finalFabricFolderId = ye.id;
+      }
+    }
+
+    if (sheetId) {
+      yearConfigs.push({
+        year: yearNum,
+        sheetId,
+        finalFabricFolderId,
+      });
+    }
+  }
+
+  return yearConfigs.sort((a, b) => b.year - a.year);
+}
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
 
 // Convert Google Drive sharing link to our image proxy
-// Input:  https://drive.google.com/open?id=FILE_ID
-// Output: /api/image/FILE_ID
 function driveToImageUrl(driveLink: string): string {
   const match = driveLink.match(/id=([a-zA-Z0-9_-]+)/);
   if (match) {
@@ -46,103 +146,58 @@ function parseCsv(text: string): string[][] {
   return rows;
 }
 
-// Normalize program names to match our Program type
+// Normalize program names
 function normalizeProgram(raw: string): string {
   const cleaned = raw.trim();
   const map: Record<string, string> = {
     "tech mba": "MBA",
-    "mba": "MBA",
+    mba: "MBA",
     "computer science": "CS",
-    "cs": "CS",
+    cs: "CS",
     "data science": "Data Science",
     "information science": "IS",
     "information systems": "IS",
-    "is": "IS",
-    "orie": "ORIE",
-    "ece": "ECE",
-    "cm": "CM",
+    is: "IS",
+    orie: "ORIE",
+    ece: "ECE",
+    cm: "CM",
     "connective media": "Connective Media",
     "health tech": "Health Tech",
-    "llm": "LLM",
-    "technion": "Technion",
-    "phd": "PhD",
+    llm: "LLM",
+    technion: "Technion",
+    phd: "PhD",
   };
   return map[cleaned.toLowerCase()] || cleaned || "CS";
 }
 
-// Fetch file IDs from a public Google Drive folder
-// Uses the folder's embedded view page to scrape file IDs (no API key needed)
-// The folder must be shared as "Anyone with the link can view"
-async function getFolderFileIds(folderId: string): Promise<string[]> {
-  try {
-    const url = `https://drive.google.com/embeddedfolderview?id=${folderId}#list`;
-    const response = await fetch(url, {
-      next: { revalidate: 300 }, // Revalidate every 5 minutes
-      headers: {
-        "User-Agent": "Mozilla/5.0",
-      },
-    });
+// Get first image file ID from a folder (for final fabric)
+async function getFirstImageFromFolder(
+  folderId: string
+): Promise<string | null> {
+  const entries = await listFolder(folderId);
 
-    if (!response.ok) return [];
-
-    const html = await response.text();
-    const fileIds: string[] = [];
-    let match;
-
-    // Pattern 1: entry IDs (e.g. id="entry-FILE_ID")
-    const entryPattern = /entry-([a-zA-Z0-9_-]{15,})/g;
-    while ((match = entryPattern.exec(html)) !== null) {
-      if (match[1] !== folderId && !fileIds.includes(match[1])) {
-        fileIds.push(match[1]);
-      }
+  // Look for non-folder entries (image files)
+  for (const entry of entries) {
+    if (!entry.isFolder && !entry.isSpreadsheet) {
+      return entry.id;
     }
-
-    // Pattern 2: file links (e.g. /file/d/FILE_ID/view)
-    if (fileIds.length === 0) {
-      const filePattern = /\/file\/d\/([a-zA-Z0-9_-]+)/g;
-      while ((match = filePattern.exec(html)) !== null) {
-        if (!fileIds.includes(match[1])) {
-          fileIds.push(match[1]);
-        }
-      }
-    }
-
-    // Pattern 3: data-id attributes or generic ID references
-    if (fileIds.length === 0) {
-      const altPattern = /(?:data-id|id)="?([a-zA-Z0-9_-]{20,})"?/g;
-      while ((match = altPattern.exec(html)) !== null) {
-        if (match[1] !== folderId && !fileIds.includes(match[1])) {
-          fileIds.push(match[1]);
-        }
-      }
-    }
-
-    return fileIds;
-  } catch (error) {
-    console.error(`Error listing folder ${folderId}:`, error);
-    return [];
   }
+
+  return null;
 }
 
-// Get the final fabric collage image URL for a year
-// Returns the proxied image URL if a final fabric image exists, otherwise null
-async function getFinalFabricUrl(config: YearConfig): Promise<string | null> {
-  if (!config.finalFabricFolderId) return null;
+// ---------------------------------------------------------------------------
+// Fetch year data from Google Sheet
+// ---------------------------------------------------------------------------
 
-  const fileIds = await getFolderFileIds(config.finalFabricFolderId);
-  if (fileIds.length === 0) return null;
-
-  // Use the first image in the folder as the final fabric
-  return `/api/image/${fileIds[0]}`;
-}
-
-// Fetch and parse a year's data from its published Google Sheet
-async function fetchYearFromSheet(config: YearConfig): Promise<YearData> {
+async function fetchYearData(config: YearConfig): Promise<YearData> {
   const artifacts: Artifact[] = [];
 
   try {
-    const response = await fetch(config.sheetCsvUrl, {
-      next: { revalidate: 300 }, // Revalidate every 5 minutes
+    // Use the export URL format — works for any publicly shared sheet
+    const csvUrl = `https://docs.google.com/spreadsheets/d/${config.sheetId}/export?format=csv`;
+    const response = await fetch(csvUrl, {
+      next: { revalidate: 300 },
     });
 
     if (!response.ok) {
@@ -183,9 +238,16 @@ async function fetchYearFromSheet(config: YearConfig): Promise<YearData> {
     console.error(`Error fetching data for year ${config.year}:`, error);
   }
 
-  // Check for final fabric image; fall back to placeholder collage
-  const finalFabricUrl = await getFinalFabricUrl(config);
-  const collageImageUrl = finalFabricUrl || `/api/placeholder/collage/${config.year}`;
+  // Check for final fabric image; fall back to placeholder
+  let collageImageUrl = `/api/placeholder/collage/${config.year}`;
+  if (config.finalFabricFolderId) {
+    const fabricFileId = await getFirstImageFromFolder(
+      config.finalFabricFolderId
+    );
+    if (fabricFileId) {
+      collageImageUrl = `/api/image/${fabricFileId}`;
+    }
+  }
 
   return {
     year: config.year,
@@ -198,24 +260,43 @@ async function fetchYearFromSheet(config: YearConfig): Promise<YearData> {
   };
 }
 
-// Public API — mirrors the old sample-data functions
+// ---------------------------------------------------------------------------
+// Public API
+// ---------------------------------------------------------------------------
 
-export async function getYearData(year: number): Promise<YearData | undefined> {
-  const config = yearsConfig.find((c) => c.year === year);
+export async function getYearData(
+  year: number
+): Promise<YearData | undefined> {
+  const configs = await discoverYears();
+  const config = configs.find((c) => c.year === year);
   if (!config) return undefined;
-  return fetchYearFromSheet(config);
+  return fetchYearData(config);
 }
 
 export async function getAllYears(): Promise<number[]> {
-  // Return configured years sorted descending
-  return yearsConfig.map((c) => c.year).sort((a, b) => b - a);
+  const configs = await discoverYears();
+  return configs.map((c) => c.year).sort((a, b) => b - a);
 }
 
 export async function getAllYearsData(): Promise<YearData[]> {
-  const results = await Promise.all(yearsConfig.map(fetchYearFromSheet));
+  const configs = await discoverYears();
+  const results = await Promise.all(configs.map(fetchYearData));
   return results.sort((a, b) => b.year - a.year);
 }
 
 export function getPrograms(): string[] {
-  return ["MBA", "CS", "ORIE", "ECE", "IS", "CM", "LLM", "Connective Media", "Health Tech", "Technion", "Data Science", "PhD"];
+  return [
+    "MBA",
+    "CS",
+    "ORIE",
+    "ECE",
+    "IS",
+    "CM",
+    "LLM",
+    "Connective Media",
+    "Health Tech",
+    "Technion",
+    "Data Science",
+    "PhD",
+  ];
 }
