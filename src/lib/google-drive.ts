@@ -87,13 +87,12 @@ async function discoverYears(): Promise<YearConfig[]> {
       }
     }
 
-    if (sheetId) {
-      yearConfigs.push({
-        year: yearNum,
-        sheetId,
-        finalFabricFolderId,
-      });
-    }
+    // Add the year even if no sheet exists yet (shows as empty year)
+    yearConfigs.push({
+      year: yearNum,
+      sheetId: sheetId || "",
+      finalFabricFolderId,
+    });
   }
 
   return yearConfigs.sort((a, b) => b.year - a.year);
@@ -194,6 +193,8 @@ async function fetchYearData(config: YearConfig): Promise<YearData> {
   const artifacts: Artifact[] = [];
 
   try {
+    if (!config.sheetId) throw new Error("No sheet configured");
+
     // Use the export URL format — works for any publicly shared sheet
     const csvUrl = `https://docs.google.com/spreadsheets/d/${config.sheetId}/export?format=csv`;
     const response = await fetch(csvUrl, {
