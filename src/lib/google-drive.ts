@@ -208,19 +208,27 @@ async function fetchYearData(config: YearConfig): Promise<YearData> {
     const csvText = await response.text();
     const rows = parseCsv(csvText);
 
-    // First row is headers: Timestamp, Email Address, NetID, Image Links, Program
+    // First row is headers — flexible matching so renaming columns won't break things
     const headers = rows[0]?.map((h) => h.toLowerCase()) || [];
-    const netIdCol = headers.findIndex((h) => h.includes("netid"));
-    const imageCol = headers.findIndex((h) => h.includes("image"));
-    const programCol = headers.findIndex((h) => h.includes("program"));
+    const netIdCol = headers.findIndex((h) => h.includes("netid") || h.includes("net id"));
+    const imageCol = headers.findIndex(
+      (h) => h.includes("image") || h.includes("upload") || h.includes("submission") || h.includes("file")
+    );
+    const programCol = headers.findIndex(
+      (h) => h.includes("program") || h.includes("major") || h.includes("degree")
+    );
+    // Fallback to known column positions if headers don't match: col 2=netid, 3=image, 4=program
+    const safeNetIdCol = netIdCol >= 0 ? netIdCol : 2;
+    const safeImageCol = imageCol >= 0 ? imageCol : 3;
+    const safeProgramCol = programCol >= 0 ? programCol : 4;
 
     for (let i = 1; i < rows.length; i++) {
       const row = rows[i];
       if (!row || row.length < 3) continue;
 
-      const netId = (row[netIdCol] || "").replace("@cornell.edu", "").trim();
-      const imageLink = row[imageCol] || "";
-      const program = row[programCol] || "";
+      const netId = (row[safeNetIdCol] || "").replace("@cornell.edu", "").trim();
+      const imageLink = row[safeImageCol] || "";
+      const program = row[safeProgramCol] || "";
 
       if (!netId || !imageLink) continue;
 
