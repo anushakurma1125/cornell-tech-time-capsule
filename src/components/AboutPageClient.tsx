@@ -44,7 +44,7 @@ export default function AboutPageClient({ founders }: AboutPageClientProps) {
               initials="AK"
               role="Fried Fellow · Class of 2026"
               imageUrl={founders.anusha}
-              bio="Anusha is a Tech MBA candidate at Cornell Tech, passionate about building meaningful traditions that connect communities. She co-founded the Time Capsule project to create a lasting digital home for every graduating class's story."
+              bio="Anusha is a Tech MBA candidate at Cornell Tech, graduating class of 2026, and a product manager who has spent the last several years building products across ride-hailing, edtech, and e-commerce in India, the UAE, and the US. She is passionate about user-centered thinking, structured problem solving, and building things people genuinely love to use. She co-founded the Time Capsule project to create a lasting digital home for every graduating class's story."
             />
 
             {/* Shivani */}
