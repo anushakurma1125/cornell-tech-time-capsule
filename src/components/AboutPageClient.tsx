@@ -105,18 +105,36 @@ export default function AboutPageClient({ founders }: AboutPageClientProps) {
             </h2>
 
             <p>
-              The <strong className="text-text-primary">Fried Fellowship</strong> at Cornell
-              Tech is a student-led initiative that empowers graduate students to design and
-              lead projects that strengthen the campus community. Fellows are given the freedom,
-              support, and resources to bring meaningful ideas to life — from cultural
-              traditions and student well-being initiatives to lasting programs that shape
-              campus life for years to come.
+              The <strong className="text-text-primary">Fried Fellowships</strong> were
+              established in 1989 by Johnson alumnus{" "}
+              <strong className="text-text-primary">Albert Fried, Jr.</strong> and were expanded
+              to include the Johnson Cornell Tech MBA program in the 2014–2015 academic year.
+              They are granted annually to two JCT MBA students who exemplify academic
+              excellence while also contributing to the community through their leadership both
+              inside and outside the classroom.
             </p>
 
             <p>
-              The fellowship is made possible through the generosity and vision of{" "}
-              <strong className="text-text-primary">Mr. Fried</strong>, whose enduring belief in
-              student leadership has touched countless cohorts at Cornell Tech.
+              The award recognizes students with the highest level of demonstrated leadership
+              and academic achievement in their Johnson careers. Over the course of the
+              academic year, Fellows work with Johnson faculty and staff on a project that
+              will benefit the Johnson community. Each Fried Fellow receives a fellowship of{" "}
+              <strong className="text-text-primary">$10,000</strong> from Mr. Albert Fried
+              Jr.&rsquo;s generous annual gift.
+            </p>
+
+            <h3 className="font-display text-xl font-bold text-text-primary pt-4 uppercase tracking-tight">
+              About Albert Fried Jr. &rsquo;52, MBA &rsquo;53
+            </h3>
+            <p>
+              Albert Fried, Jr. served as Managing Member at Albert Fried &amp; Company, LLC
+              and Buttonwood Specialists, LLC. He is a Co-Founder of The Charles A. &amp; Anne
+              Morrow Lindbergh Fund and The Centurion Foundation, and served as President of
+              the Charles A. and Anne Morrow Lindbergh Fund. He served as a Captain in the
+              U.S. Air Force, and is a Member Emeritus of the Advisory Council of the S. C.
+              Johnson Graduate School of Management at Cornell University. Mr. Fried graduated
+              from Cornell University with a Bachelor of Arts in June 1952 and a Master&rsquo;s
+              in Business Administration in June 1953.
             </p>
 
             {/* ============ THANK YOU ============ */}
@@ -125,10 +143,10 @@ export default function AboutPageClient({ founders }: AboutPageClientProps) {
                 A Special Thank You
               </h3>
               <p className="mt-3 text-text-primary leading-relaxed">
-                To <strong>Mr. Fried</strong> — thank you for your continued support of Cornell
-                Tech students. Your generosity made this project possible, and your belief in
-                student-led ideas continues to enrich every class that passes through these
-                halls. The Time Capsule is, in many ways, a tribute to that belief.
+                To <strong>Mr. Fried</strong> — thank you for your continued generosity and
+                support of Cornell Tech students. The Fried Fellowship has empowered countless
+                students to bring meaningful ideas to life, and the Time Capsule is one of
+                many traditions made possible by your enduring belief in student leadership.
               </p>
             </div>
 
