@@ -145,28 +145,9 @@ function parseCsv(text: string): string[][] {
   return rows;
 }
 
-// Normalize program names
+// Use the exact program name as written in the form response
 function normalizeProgram(raw: string): string {
-  const cleaned = raw.trim();
-  const map: Record<string, string> = {
-    "tech mba": "MBA",
-    mba: "MBA",
-    "computer science": "CS",
-    cs: "CS",
-    "data science": "Data Science",
-    "information science": "IS",
-    "information systems": "IS",
-    is: "IS",
-    orie: "ORIE",
-    ece: "ECE",
-    cm: "CM",
-    "connective media": "Connective Media",
-    "health tech": "Health Tech",
-    llm: "LLM",
-    technion: "Technion",
-    phd: "PhD",
-  };
-  return map[cleaned.toLowerCase()] || cleaned || "CS";
+  return raw.trim();
 }
 
 // Get first image file ID from a folder (for final fabric)
