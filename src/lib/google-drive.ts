@@ -274,6 +274,41 @@ export async function getAllYearsData(): Promise<YearData[]> {
   return results.sort((a, b) => b.year - a.year);
 }
 
+export interface Founder {
+  name: string;
+  imageUrl: string | null;
+}
+
+// Discover team photos from a "Team" (or "Founders") subfolder in the main Drive folder
+// Match is done by filename — e.g. anusha.jpg → Anusha Kurma's photo
+export async function getFounders(): Promise<Record<string, string | null>> {
+  const result: Record<string, string | null> = {
+    anusha: null,
+    shivani: null,
+  };
+
+  const mainEntries = await listFolder(MAIN_DRIVE_FOLDER_ID);
+  const teamFolder = mainEntries.find((e) => {
+    if (!e.isFolder) return false;
+    const t = e.title.toLowerCase();
+    return t.includes("team") || t.includes("founder");
+  });
+  if (!teamFolder) return result;
+
+  const photos = await listFolder(teamFolder.id);
+  for (const photo of photos) {
+    if (photo.isFolder || photo.isSpreadsheet) continue;
+    const lowerTitle = photo.title.toLowerCase();
+    if (lowerTitle.includes("anusha")) {
+      result.anusha = `/api/image/${photo.id}`;
+    } else if (lowerTitle.includes("shivani")) {
+      result.shivani = `/api/image/${photo.id}`;
+    }
+  }
+
+  return result;
+}
+
 export function getPrograms(): string[] {
   return [
     "MBA",
