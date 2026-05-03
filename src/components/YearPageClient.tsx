@@ -54,12 +54,18 @@ export default function YearPageClient({ yearStr, data, programs }: YearPageClie
       {/* Hero / Collage Section */}
       <section className="relative">
         <div className="max-w-7xl mx-auto px-4 pt-8">
-          {/* Breadcrumb */}
-          <nav className="flex items-center gap-2 text-sm text-text-muted mb-6">
-            <Link href="/archive" className="hover:text-cornell-red transition-colors">Archive</Link>
-            <span>/</span>
-            <span className="text-text-primary font-medium">{year}</span>
-          </nav>
+          {/* Back button */}
+          <div className="mb-6">
+            <Link
+              href="/archive"
+              className="inline-flex items-center gap-2 text-sm font-medium text-cornell-red hover:gap-3 transition-all"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M19 12H5M12 19l-7-7 7-7" />
+              </svg>
+              Back to Archive
+            </Link>
+          </div>
 
           {/* Year title */}
           <motion.div
