@@ -20,11 +20,70 @@ export default function AboutPage() {
         </Link>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+          {/* ============ INTRO: The People ============ */}
           <h1 className="font-display text-4xl sm:text-5xl font-black text-cornell-red uppercase tracking-tight">
-            About the Time Capsule
+            Meet the Founders
           </h1>
+          <p className="mt-4 text-text-secondary leading-relaxed">
+            The Cornell Tech Time Capsule was started by{" "}
+            <strong className="text-text-primary">Anusha Kurma</strong> and{" "}
+            <strong className="text-text-primary">Shivani Kadakia</strong> as part of their
+            Fried Fellowship project — a tradition designed to give every graduating class a
+            way to leave their mark on Cornell Tech.
+          </p>
 
-          <div className="mt-8 space-y-6 text-text-secondary leading-relaxed">
+          {/* Founders Cards */}
+          <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {/* Anusha */}
+            <div className="bg-white rounded-xl border border-warm-gray overflow-hidden hover:shadow-md transition-shadow">
+              <div className="relative aspect-[4/5] bg-gradient-to-br from-cornell-red/10 to-warm-gray/40 flex items-center justify-center">
+                <span className="font-display text-6xl font-black text-cornell-red/30">AK</span>
+              </div>
+              <div className="p-5">
+                <h3 className="font-display text-xl font-bold text-text-primary">
+                  Anusha Kurma
+                </h3>
+                <p className="text-sm text-cornell-red font-medium uppercase tracking-wide mt-1">
+                  Fried Fellow · Class of 2026
+                </p>
+                <p className="text-sm text-text-secondary mt-3 leading-relaxed">
+                  {/* TODO: Replace with Anusha's bio */}
+                  Anusha is a Tech MBA candidate at Cornell Tech, passionate about building
+                  meaningful traditions that connect communities. She co-founded the Time
+                  Capsule project to create a lasting digital home for every graduating
+                  class&apos;s story.
+                </p>
+              </div>
+            </div>
+
+            {/* Shivani */}
+            <div className="bg-white rounded-xl border border-warm-gray overflow-hidden hover:shadow-md transition-shadow">
+              <div className="relative aspect-[4/5] bg-gradient-to-br from-cornell-red/10 to-warm-gray/40 flex items-center justify-center">
+                <span className="font-display text-6xl font-black text-cornell-red/30">SK</span>
+              </div>
+              <div className="p-5">
+                <h3 className="font-display text-xl font-bold text-text-primary">
+                  Shivani Kadakia
+                </h3>
+                <p className="text-sm text-cornell-red font-medium uppercase tracking-wide mt-1">
+                  Fried Fellow · Class of 2026
+                </p>
+                <p className="text-sm text-text-secondary mt-3 leading-relaxed">
+                  {/* TODO: Replace with Shivani's bio */}
+                  Shivani is a Tech MBA candidate at Cornell Tech, focused on the intersection
+                  of design, storytelling, and student life. She co-founded the Time Capsule
+                  project to weave the threads of every cohort into one shared archive.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-16 space-y-6 text-text-secondary leading-relaxed">
+            {/* ============ ABOUT THE TIME CAPSULE ============ */}
+            <h2 className="font-display text-3xl font-black text-cornell-red pt-4 uppercase tracking-tight">
+              About the Time Capsule
+            </h2>
+
             <p>
               The <strong className="text-text-primary">Cornell Tech Time Capsule</strong> is an
               annual tradition that invites every graduating student to answer one question:
@@ -41,19 +100,19 @@ export default function AboutPage() {
               and then physically sealed in a time capsule on Roosevelt Island.
             </p>
 
-            <h2 className="font-display text-2xl font-black text-text-primary pt-4 uppercase tracking-tight">
+            <h3 className="font-display text-xl font-bold text-text-primary pt-2 uppercase tracking-tight">
               The Digital Archive
-            </h2>
+            </h3>
             <p>
-              This website preserves each cohort&rsquo;s collage and every individual submission in
-              a searchable, year-based archive. Browse by graduation year, search by NetID, or
-              filter by program to discover the stories, themes, and emotions that defined each
-              class.
+              This website preserves each cohort&rsquo;s collage and every individual submission
+              in a searchable, year-based archive. Browse by graduation year, search by NetID,
+              or filter by program to discover the stories, themes, and emotions that defined
+              each class.
             </p>
 
-            <h2 className="font-display text-2xl font-black text-text-primary pt-4 uppercase tracking-tight">
+            <h3 className="font-display text-xl font-bold text-text-primary pt-2 uppercase tracking-tight">
               Why It Matters
-            </h2>
+            </h3>
             <p>
               The time capsule creates continuity between cohorts. Future students can explore
               past years during orientation. Alumni can revisit their contributions years later.
@@ -61,7 +120,40 @@ export default function AboutPage() {
               digitally — grows richer with every graduating class.
             </p>
 
-            <div className="pt-6">
+            {/* ============ ABOUT THE FRIED FELLOWSHIP ============ */}
+            <h2 className="font-display text-3xl font-black text-cornell-red pt-10 uppercase tracking-tight">
+              About the Fried Fellowship
+            </h2>
+
+            <p>
+              The <strong className="text-text-primary">Fried Fellowship</strong> at Cornell
+              Tech is a student-led initiative that empowers graduate students to design and
+              lead projects that strengthen the campus community. Fellows are given the freedom,
+              support, and resources to bring meaningful ideas to life — from cultural
+              traditions and student well-being initiatives to lasting programs that shape
+              campus life for years to come.
+            </p>
+
+            <p>
+              The fellowship is made possible through the generosity and vision of{" "}
+              <strong className="text-text-primary">Mr. Fried</strong>, whose enduring belief in
+              student leadership has touched countless cohorts at Cornell Tech.
+            </p>
+
+            {/* ============ THANK YOU ============ */}
+            <div className="mt-10 p-6 bg-parchment-dark rounded-xl border border-warm-gray">
+              <h3 className="font-display text-xl font-bold text-cornell-red uppercase tracking-tight">
+                A Special Thank You
+              </h3>
+              <p className="mt-3 text-text-primary leading-relaxed">
+                To <strong>Mr. Fried</strong> — thank you for your continued support of Cornell
+                Tech students. Your generosity made this project possible, and your belief in
+                student-led ideas continues to enrich every class that passes through these
+                halls. The Time Capsule is, in many ways, a tribute to that belief.
+              </p>
+            </div>
+
+            <div className="pt-10">
               <Link
                 href="/archive"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-cornell-red text-white font-semibold rounded-lg hover:bg-cornell-red-dark transition-colors"
