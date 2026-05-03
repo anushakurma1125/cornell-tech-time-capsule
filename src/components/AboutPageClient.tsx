@@ -26,7 +26,7 @@ export default function AboutPageClient({ founders }: AboutPageClientProps) {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           {/* ============ INTRO: The People ============ */}
           <h1 className="font-display text-4xl sm:text-5xl font-black text-cornell-red uppercase tracking-tight">
-            Meet the Founders
+            Meet the Team
           </h1>
           <p className="mt-4 text-text-secondary leading-relaxed">
             The Cornell Tech Time Capsule was started by{" "}
