@@ -144,7 +144,7 @@ export default function AboutPageClient({ founders }: AboutPageClientProps) {
               </h3>
               <p className="mt-3 text-text-primary leading-relaxed">
                 To <strong>Mr. Fried</strong> — thank you for your continued generosity and
-                support of Cornell Tech students. The Fried Fellowship has empowered countless
+                support of Cornell Tech students. The Fried Fellowship has empowered many
                 students to bring meaningful ideas to life, and the Time Capsule is one of
                 many traditions made possible by your enduring belief in student leadership.
               </p>
