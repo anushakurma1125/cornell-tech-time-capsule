@@ -53,7 +53,7 @@ export default function AboutPageClient({ founders }: AboutPageClientProps) {
               initials="SK"
               role="Fried Fellow · Class of 2026"
               imageUrl={founders.shivani}
-              bio="Shivani is a Tech MBA candidate at Cornell Tech, focused on the intersection of design, storytelling, and student life. She co-founded the Time Capsule project to weave the threads of every cohort into one shared archive."
+              bio="Shivani is a Tech MBA candidate at Cornell Tech, class of 2026, with experience spanning banking and pharma. In pharma, she served as a data operations lead for multiple clinical trials, where she developed a deep appreciation for building structure and clarity in complex environments that ultimately support the advancement of patient care. She is passionate about bridging technology, strategy, and healthcare to create thoughtful solutions that improve how teams work and how people experience care. She also co-founded the Time Capsule project to create a meaningful community artifact that captures and celebrates the shared story of each cohort."
             />
           </div>
 
